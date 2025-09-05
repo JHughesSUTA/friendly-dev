@@ -3,6 +3,7 @@ import type { Route } from "./+types/index";
 import type { Project } from "~/types";
 import ProjectCard from "~/components/ProjectCard";
 import Pagination from "~/components/Pagination";
+import { AnimatePresence, motion } from "framer-motion";
 
 export async function loader({
   request,
@@ -26,6 +27,8 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
     ...new Set(projects.map((project) => project.category)),
   ];
 
+  console.log(categories);
+
   // Filter project based on the category
   const filteredProjects =
     selectedCategory === "All"
@@ -47,7 +50,7 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
       <div className="flex flex-wrap gap-2 mb-8">
         {categories.map((category) => (
           <button
-            key="category"
+            key={category}
             onClick={() => {
               setSelectedCategory(category);
               setCurrentPage(1);
@@ -59,11 +62,15 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
         ))}
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        {currentProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div layout className="grid gap-6 sm:grid-cols-2">
+          {currentProjects.map((project) => (
+            <motion.div key={project.id} layout>
+              <ProjectCard project={project} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
 
       <Pagination
         totalPages={totalPages}
