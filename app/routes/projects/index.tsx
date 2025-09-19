@@ -27,8 +27,6 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
     ...new Set(projects.map((project) => project.category)),
   ];
 
-  console.log(categories);
-
   // Filter project based on the category
   const filteredProjects =
     selectedCategory === "All"
